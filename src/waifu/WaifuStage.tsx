@@ -11,18 +11,27 @@ import { ReactionSystem } from "@/waifu/reactionSystem";
 import type { Settings } from "@/waifu/types";
 import type { VRM } from "@pixiv/three-vrm";
 
+export interface WaifuHandle {
+  speak: (text: string) => Promise<void>;
+  triggerHappy: () => void;
+}
+
 interface Props {
   settings: Settings;
   modelUrl: string;
-  onSpeakRef: (fn: (text: string) => Promise<void>) => void;
+  handleRef: { current: WaifuHandle | null };
   onStatus?: (s: string) => void;
 }
 
-export function WaifuStage({ settings, modelUrl, onSpeakRef, onStatus }: Props) {
+export function WaifuStage({ settings, modelUrl, handleRef, onStatus }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
   const [error, setError] = useState<string | null>(null);
+
+  // Hold instances in refs so the settings effect can reach them
+  const micRef = useRef<MicInput | null>(null);
+  const motionRef = useRef<MotionDetect | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -34,13 +43,15 @@ export function WaifuStage({ settings, modelUrl, onSpeakRef, onStatus }: Props) 
     const voice = new VoiceEngine();
     const mic = new MicInput();
     const motion = new MotionDetect();
+    micRef.current = mic;
+    motionRef.current = motion;
 
     let vrm: VRM | null = null;
     let anim: AnimationController | null = null;
     let lip: LipSync | null = null;
     let reaction: ReactionSystem | null = null;
 
-    onStatus?.("Loading model…");
+    onStatus?.("Loading…");
     loadVRM(modelUrl)
       .then((loaded) => {
         if (disposed) {
@@ -49,17 +60,9 @@ export function WaifuStage({ settings, modelUrl, onSpeakRef, onStatus }: Props) 
         }
         vrm = loaded;
         renderer.scene.add(loaded.scene);
-        loaded.scene.position.y = 0;
         anim = new AnimationController(loaded);
         lip = new LipSync(loaded, voice.getLipSyncSampler());
-        reaction = new ReactionSystem({
-          state,
-          mic,
-          motion,
-          voice,
-          anim,
-          settings: settingsRef.current,
-        });
+        reaction = new ReactionSystem({ state, mic, motion, voice, anim, settings: settingsRef.current });
         state.on((s, e) => {
           anim?.setState(s);
           anim?.setEmotion(e);
@@ -81,17 +84,23 @@ export function WaifuStage({ settings, modelUrl, onSpeakRef, onStatus }: Props) 
       }
     });
 
-    onSpeakRef(async (text: string) => {
-      if (!settingsRef.current.voiceEnabled) return;
-      const emo = state.emotion;
-      const offset = emo === "happy" ? 0.1 : emo === "scared" ? 0.2 : 0;
-      await voice.speak(text, {
-        pitch: settingsRef.current.pitch,
-        rate: settingsRef.current.rate,
-        volume: settingsRef.current.volume,
-        emotionPitchOffset: offset,
-      });
-    });
+    handleRef.current = {
+      speak: async (text: string) => {
+        if (!settingsRef.current.voiceEnabled) return;
+        const emo = state.emotion;
+        const offset = emo === "happy" ? 0.1 : emo === "scared" ? 0.2 : 0;
+        await voice.speak(text, {
+          pitch: settingsRef.current.pitch,
+          rate: settingsRef.current.rate,
+          volume: settingsRef.current.volume,
+          emotionPitchOffset: offset,
+        });
+      },
+      triggerHappy: () => {
+        state.setEmotion("happy");
+        state.setState("HAPPY", 2500);
+      },
+    };
 
     return () => {
       disposed = true;
@@ -101,21 +110,38 @@ export function WaifuStage({ settings, modelUrl, onSpeakRef, onStatus }: Props) 
       motion.stop();
       if (vrm) disposeVRM(vrm);
       renderer.dispose();
+      handleRef.current = null;
+      micRef.current = null;
+      motionRef.current = null;
     };
-  }, [modelUrl, onSpeakRef, onStatus]);
+  }, [modelUrl, handleRef, onStatus]);
 
-  // toggle mic / webcam based on settings
+  // Mic toggle
   useEffect(() => {
-    // We can't easily reach mic/motion instances from above effect; re-create on modelUrl change.
-    // Instead, attach handlers to settings via window event to stay simple.
-    const event = new CustomEvent("waifu:settings", { detail: settings });
-    window.dispatchEvent(event);
-  }, [settings]);
+    const m = micRef.current;
+    if (!m) return;
+    if (settings.micEnabled && !m.active) {
+      m.start().catch((e) => console.warn("Mic failed:", e));
+    } else if (!settings.micEnabled && m.active) {
+      m.stop();
+    }
+  }, [settings.micEnabled]);
+
+  // Webcam toggle
+  useEffect(() => {
+    const m = motionRef.current;
+    if (!m) return;
+    if (settings.webcamEnabled && !m.active) {
+      m.start().catch((e) => console.warn("Webcam failed:", e));
+    } else if (!settings.webcamEnabled && m.active) {
+      m.stop();
+    }
+  }, [settings.webcamEnabled]);
 
   return (
     <div ref={containerRef} className="absolute inset-0">
       {error && (
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-destructive/90 px-4 py-3 text-destructive-foreground text-sm">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-md rounded-lg bg-destructive/90 px-4 py-3 text-destructive-foreground text-sm">
           {error}
         </div>
       )}
