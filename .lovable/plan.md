@@ -1,58 +1,49 @@
 
-# 🎮 AI Anime Waifu Live Wallpaper
+# Add a visible chat message log
 
-A 3D anime character that lives on your screen — talks, listens, reacts to sound and motion, and changes mood. Runs entirely in the browser.
+The OpenRouter integration already works (`aiEngine.ts` → `chatWithAI`), but replies only flash briefly as a speech bubble. I'll add a proper, persistent chat panel so you can see the full conversation while typing.
 
-## What gets built
+## What changes
 
-### Page (single route `/`)
-A fullscreen canvas with the VRM character centered over a chosen background. A subtle settings gear (top-right) and chat input (bottom) auto-hide after 3s of mouse inactivity and reappear on movement. Fullscreen "wallpaper mode" toggle.
+### 1. New `ChatPanel.tsx` (replaces the transient bubble)
+A scrollable chat log pinned above the input bar showing the full back-and-forth:
+- User messages aligned right (primary color bubble)
+- Assistant messages aligned left (card bubble)
+- "Thinking…" indicator while waiting for AI
+- Auto-scrolls to newest message
+- Empty state: "Say hi to your waifu 👋"
+- Markdown rendering of assistant replies (via `react-markdown`)
 
-### Your uploaded VRM
-Your file is copied to `public/models/waifu.vrm` and set as the default. Drop more `.vrm` files into `public/models/` and add their filenames to `public/models/manifest.json` to expose them in the model selector.
+### 2. `src/routes/index.tsx` — wire it in
+- Remove the `bubble` state and the speech-bubble `<motion.div>`
+- Render `<ChatPanel messages={history} busy={busy} />` above the `<ChatBar>`
+- Keep voice/animation calls (`handleRef.current?.speak`, `triggerHappy`) intact but untouched — chat works independently
+- Surface API errors as both a toast AND a system message in the log so failures are visible
 
-### Core systems (modular, vanilla-style classes under `src/`)
-- **renderer** — Three.js scene, camera, lighting, render loop
-- **vrmLoader** — loads VRM models, hot-swaps without reload
-- **animation** — idle breathing, auto-blink, head look-at, smooth state transitions
-- **voiceEngine** — browser SpeechSynthesis with anime preset (pitch 1.6, rate 1.1) routed through Web Audio: GainNode + BiquadFilter (high-shelf boost) + light convolver reverb
-- **lipSync** — AnalyserNode reads TTS audio volume → drives `vrm.expressionManager.setValue("aa", v)` with smoothing + noise clamp every frame
-- **micInput** — mic stream + AnalyserNode for loudness detection
-- **motionDetect** — webcam frame-difference (downscaled canvas) → motion score
-- **aiEngine** — calls OpenRouter with the user's key from Settings; system prompt: *"You're a cute anime assistant. Speak in short, expressive, playful sentences. Use emotions like 'ehh?', 'yay!', 'hmm~'."*
-- **stateManager** — IDLE / TALKING / LISTENING / SCARED / HAPPY with smooth blends
-- **emotionSystem** — calm / happy / scared / curious; modulates voice pitch & idle timing
-- **reactionSystem** — combines all inputs:
-  - voice/AI reply → TALKING
-  - loud noise (no speech) → SCARED
-  - webcam motion → CURIOUS
-  - positive AI sentiment → HAPPY
-  - else → IDLE
+### 3. `src/waifu/aiEngine.ts` — minor robustness
+- Trim trailing/leading whitespace from replies
+- Clearer error messages for 401 (bad key), 402 (out of credits), 429 (rate limit)
+- No model change (keeps free Llama 3.2)
 
-### UI
-- **Chat bar** — type or hit 🎤 for speech-to-text (Web Speech API), sends to AI, response is spoken with lip sync
-- **Settings panel** (gear icon, slide-in):
-  - OpenRouter API key (stored in localStorage, password field)
-  - Model selector (VRM list from manifest)
-  - Background selector (`bg1.jpg`, `bg2.jpg`, plus solid colors)
-  - Voice on/off, mic on/off, webcam on/off
-  - Sound sensitivity slider, motion sensitivity slider
-  - Voice pitch & rate sliders
-- **Fullscreen toggle** for live-wallpaper mode
+### 4. `src/waifu/ChatBar.tsx` — small fix
+- `Enter` to send, `Shift+Enter` for newline (currently fine via form submit, just confirming)
+- Clear input only after successful send so user doesn't lose text on failure
 
-### Persistence
-All settings + selected model/background saved in `localStorage`.
+### 5. Dependency
+- Add `react-markdown` for rendering assistant responses
 
-### Performance
-- Single `requestAnimationFrame` loop, throttled motion detection (every 3rd frame at 160×120)
-- Lazy-load VRM only when selected
-- No heavy ML models — pure Web APIs
+## Flow (unchanged from current code, just made visible)
+```
+user types → ChatBar.onSend → handleSend in index.tsx
+  → append {role:"user"} to history
+  → chatWithAI(apiKey, history)  ← OpenRouter POST
+  → append {role:"assistant", content: reply} to history
+  → ChatPanel re-renders with new message
+```
 
-## Honest limitations
-- **OpenRouter key lives in browser localStorage** (your choice). Don't use a key with high spending limits.
-- **VRM file listing** — browsers can't scan folders, so users edit `public/models/manifest.json` to register new models.
-- **Wrapped in React/TanStack Start** (not vanilla `index.html`) since that's this project's stack — same behavior, same deployability on Vercel.
-- **Backgrounds** — I'll generate two simple anime-style backgrounds (`bg1.jpg`, `bg2.jpg`) so the selector has working defaults.
+## What I'm NOT touching (per your request)
+- VRM rendering, lip sync, animation, TTS, mic, webcam, motion detection — all left as-is
+- Settings panel — already has the API key field
 
-## Deliverables
-Working app on `/` with your VRM loaded by default, full settings panel, and all reactive systems wired up. Ready to deploy to Vercel.
+## Result
+A real chat window where you type, see your message, see the AI's reply persisted in a scrollable log, and can continue the conversation. Voice and animation continue to fire in the background but are not the focus.
