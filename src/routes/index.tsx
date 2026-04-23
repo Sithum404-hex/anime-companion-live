@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { WaifuStage, type WaifuHandle } from "@/waifu/WaifuStage";
 import { SettingsPanel } from "@/waifu/SettingsPanel";
 import { ChatBar } from "@/waifu/ChatBar";
-import { ChatPanel } from "@/waifu/ChatPanel";
 import { DEFAULT_SETTINGS, type Settings, type ModelManifest } from "@/waifu/types";
 import { chatWithAI, sentimentEmotion, type ChatMsg } from "@/waifu/aiEngine";
 import { toast } from "sonner";
@@ -44,10 +43,19 @@ function Index() {
   const [status, setStatus] = useState("Loading…");
   const [isFs, setIsFs] = useState(false);
   const [history, setHistory] = useState<ChatMsg[]>([]);
+  const [subtitle, setSubtitle] = useState<string>("");
   const [manifest, setManifest] = useState<ModelManifest | null>(null);
 
   const handleRef = useRef<WaifuHandle | null>(null);
   const hideTimer = useRef<number | null>(null);
+  const subtitleTimer = useRef<number | null>(null);
+
+  const showSubtitle = useCallback((text: string, ms?: number) => {
+    setSubtitle(text);
+    if (subtitleTimer.current) window.clearTimeout(subtitleTimer.current);
+    const duration = ms ?? Math.min(8000, 2500 + text.length * 40);
+    subtitleTimer.current = window.setTimeout(() => setSubtitle(""), duration);
+  }, []);
 
   // Hydrate settings on client
   useEffect(() => {
@@ -125,16 +133,17 @@ function Index() {
         setHistory((h) => [...h, { role: "assistant", content: reply }]);
         const emo = sentimentEmotion(reply);
         if (emo === "happy") handleRef.current?.triggerHappy();
+        showSubtitle(reply);
         void handleRef.current?.speak(reply);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         toast.error(msg);
-        setHistory((h) => [...h, { role: "system", content: `⚠️ ${msg}` }]);
+        showSubtitle(`⚠️ ${msg}`, 5000);
       } finally {
         setBusy(false);
       }
     },
-    [history, settings.apiKey],
+    [history, settings.apiKey, showSubtitle],
   );
 
   const bgStyle = useMemo(() => {
@@ -178,16 +187,33 @@ function Index() {
         )}
       </AnimatePresence>
 
-      {/* Bottom chat panel + bar */}
+      {/* Subtitle (AI reply shown like a movie subtitle) */}
+      <AnimatePresence>
+        {subtitle && (
+          <motion.div
+            key={subtitle}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
+            transition={{ duration: 0.25 }}
+            className="pointer-events-none absolute bottom-28 left-1/2 z-20 w-[90%] max-w-3xl -translate-x-1/2 text-center"
+          >
+            <p className="inline-block rounded-xl bg-black/60 px-5 py-2.5 text-base sm:text-lg font-medium leading-snug text-white shadow-2xl backdrop-blur-md [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
+              {subtitle}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom chat bar */}
       <AnimatePresence>
         {uiVisible && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-6 left-1/2 z-30 w-[92%] -translate-x-1/2 flex flex-col items-center gap-3"
+            className="absolute bottom-6 left-1/2 z-30 w-[92%] -translate-x-1/2 flex justify-center"
           >
-            <ChatPanel messages={history} busy={busy} />
             <ChatBar onSend={handleSend} busy={busy} />
           </motion.div>
         )}
