@@ -24,10 +24,14 @@ export async function chatWithAI(apiKey: string, history: ChatMsg[]): Promise<st
   });
   if (!res.ok) {
     const t = await res.text();
+    if (res.status === 401) throw new Error("Invalid OpenRouter API key. Check Settings.");
+    if (res.status === 402) throw new Error("OpenRouter credits exhausted. Top up your account.");
+    if (res.status === 429) throw new Error("Rate limited by OpenRouter. Please wait a moment.");
     throw new Error(`AI error ${res.status}: ${t.slice(0, 200)}`);
   }
   const data = await res.json();
-  return (data.choices?.[0]?.message?.content as string) ?? "...ehh?";
+  const content = (data.choices?.[0]?.message?.content as string) ?? "...ehh?";
+  return content.trim();
 }
 
 const POSITIVE = ["yay", "happy", "love", "great", "haha", "awesome", "cute", "wonderful", "yes!", "sugoi"];

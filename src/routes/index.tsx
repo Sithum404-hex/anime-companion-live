@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { WaifuStage, type WaifuHandle } from "@/waifu/WaifuStage";
 import { SettingsPanel } from "@/waifu/SettingsPanel";
 import { ChatBar } from "@/waifu/ChatBar";
+import { ChatPanel } from "@/waifu/ChatPanel";
 import { DEFAULT_SETTINGS, type Settings, type ModelManifest } from "@/waifu/types";
 import { chatWithAI, sentimentEmotion, type ChatMsg } from "@/waifu/aiEngine";
 import { toast } from "sonner";
@@ -43,7 +44,6 @@ function Index() {
   const [status, setStatus] = useState("Loading…");
   const [isFs, setIsFs] = useState(false);
   const [history, setHistory] = useState<ChatMsg[]>([]);
-  const [bubble, setBubble] = useState<string>("");
   const [manifest, setManifest] = useState<ModelManifest | null>(null);
 
   const handleRef = useRef<WaifuHandle | null>(null);
@@ -125,13 +125,11 @@ function Index() {
         setHistory((h) => [...h, { role: "assistant", content: reply }]);
         const emo = sentimentEmotion(reply);
         if (emo === "happy") handleRef.current?.triggerHappy();
-        setBubble(reply);
-        await handleRef.current?.speak(reply);
-        // hide bubble shortly after
-        setTimeout(() => setBubble(""), Math.min(8000, 2500 + reply.length * 40));
+        void handleRef.current?.speak(reply);
       } catch (e) {
         const msg = e instanceof Error ? e.message : String(e);
         toast.error(msg);
+        setHistory((h) => [...h, { role: "system", content: `⚠️ ${msg}` }]);
       } finally {
         setBusy(false);
       }
@@ -158,20 +156,6 @@ function Index() {
       {/* 3D stage */}
       <WaifuStage settings={settings} modelUrl={modelUrl} handleRef={handleRef} onStatus={setStatus} />
 
-      {/* Speech bubble */}
-      <AnimatePresence>
-        {bubble && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="pointer-events-none absolute left-1/2 top-[18%] -translate-x-1/2 max-w-md rounded-2xl border border-border bg-card/85 px-5 py-3 text-card-foreground shadow-xl backdrop-blur-md"
-          >
-            <p className="text-sm leading-snug">{bubble}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Top-right controls */}
       <AnimatePresence>
         {uiVisible && (
@@ -194,15 +178,16 @@ function Index() {
         )}
       </AnimatePresence>
 
-      {/* Bottom chat bar */}
+      {/* Bottom chat panel + bar */}
       <AnimatePresence>
         {uiVisible && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-6 left-1/2 z-30 w-[92%] -translate-x-1/2 flex justify-center"
+            className="absolute bottom-6 left-1/2 z-30 w-[92%] -translate-x-1/2 flex flex-col items-center gap-3"
           >
+            <ChatPanel messages={history} busy={busy} />
             <ChatBar onSend={handleSend} busy={busy} />
           </motion.div>
         )}
