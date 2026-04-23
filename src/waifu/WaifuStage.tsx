@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
 import { Renderer } from "@/waifu/renderer";
 import { loadVRM, disposeVRM } from "@/waifu/vrmLoader";
 import { AnimationController } from "@/waifu/animation";
@@ -9,7 +10,7 @@ import { MotionDetect } from "@/waifu/motionDetect";
 import { StateManager } from "@/waifu/stateManager";
 import { ReactionSystem } from "@/waifu/reactionSystem";
 import type { Settings } from "@/waifu/types";
-import type { VRM } from "@pixiv/three-vrm";
+import { VRMHumanBoneName, type VRM } from "@pixiv/three-vrm";
 
 export interface WaifuHandle {
   speak: (text: string) => Promise<void>;
@@ -64,9 +65,9 @@ export function WaifuStage({ settings, modelUrl, handleRef, onStatus }: Props) {
         // Auto-frame the camera on the head/upper body using VRM bones.
         try {
           const hum = loaded.humanoid;
-          const head = hum?.getNormalizedBoneNode("head" as never);
-          const hips = hum?.getNormalizedBoneNode("hips" as never);
-          const headWorld = new (require("three") as typeof import("three")).Vector3();
+          const head = hum?.getNormalizedBoneNode(VRMHumanBoneName.Head);
+          const hips = hum?.getNormalizedBoneNode(VRMHumanBoneName.Hips);
+          const headWorld = new THREE.Vector3();
           if (head) {
             head.getWorldPosition(headWorld);
           } else if (hips) {
