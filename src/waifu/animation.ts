@@ -60,25 +60,16 @@ export class AnimationController {
       neck.rotation.x = this.headOffset.x * 0.4;
     }
 
-    // arms idle pose — bring arms down from T-pose to natural rest at sides.
-    // For VRM, upper-arm rotation.z rotates around the forward axis:
-    //   Left arm needs negative Z to drop down, Right arm needs positive Z.
-    // "happy" raises them outward/up.
-    const targetArm = this.state === "HAPPY" ? 1 : this.state === "SCARED" ? 0.4 : 0;
-    this.armBlend = THREE.MathUtils.lerp(this.armBlend, targetArm, Math.min(1, dt * 3));
-    const setArm = (name: VRMHumanBoneName, restZ: number, happyZ: number, sign: number) => {
-      const b = hum.getNormalizedBoneNode(name);
-      if (b) {
-        const wave = this.state === "HAPPY" ? Math.sin(this.t * 6) * 0.2 * sign : 0;
-        b.rotation.z = THREE.MathUtils.lerp(restZ, happyZ + wave, this.armBlend);
-        // slight forward shoulder for natural look
-        b.rotation.x = THREE.MathUtils.lerp(0.05, -0.3, this.armBlend);
-      }
-    };
-    // Left arm: rest ~ -1.2 rad (down), happy ~ -0.4 (raised outward)
-    setArm(VRMHumanBoneName.LeftUpperArm, -1.2, -0.4, -1);
-    // Right arm: rest ~ +1.2 rad (down), happy ~ +0.4 (raised outward)
-    setArm(VRMHumanBoneName.RightUpperArm, 1.2, 0.4, 1);
+    // Avoid forcing arm bones into absolute angles.
+    // Different VRMs have different local bone axes, which can put hands above the head.
+    // Keep the native rest pose and animate the torso/head only for compatibility.
+    this.armBlend = THREE.MathUtils.lerp(this.armBlend, this.state === "HAPPY" ? 1 : 0, Math.min(1, dt * 3));
+    if (chest) {
+      chest.rotation.z += Math.sin(this.t * 4.5) * 0.015 * this.armBlend;
+    }
+    if (spine) {
+      spine.rotation.z += Math.sin(this.t * 3.2) * 0.01 * this.armBlend;
+    }
 
     // blinking
     this.blinkTimer += dt;

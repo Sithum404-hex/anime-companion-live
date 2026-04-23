@@ -12,13 +12,8 @@ export async function loadVRM(url: string): Promise<VRM> {
   vrm.scene.traverse((obj) => {
     obj.frustumCulled = false;
   });
-  // VRM 1.0 models already face +Z (toward a camera at positive Z). Do not rotate.
-  // Ensure VRM 0.x models (which face -Z) are flipped to face the camera.
-  const meta = (vrm as unknown as { meta?: { metaVersion?: string } }).meta;
-  const isVRM0 = meta?.metaVersion === "0";
-  if (isVRM0) {
-    vrm.scene.rotation.y = Math.PI;
-  }
+  // Let the official helper rotate legacy VRM 0.x models only.
+  VRMUtils.rotateVRM0(vrm);
   return vrm;
 }
 

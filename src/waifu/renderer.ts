@@ -4,7 +4,7 @@ export class Renderer {
   scene: THREE.Scene;
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
-  clock = new THREE.Clock();
+  timer = new THREE.Timer();
   private resizeObs?: ResizeObserver;
   private container: HTMLElement;
   private rafId = 0;
@@ -62,7 +62,8 @@ export class Renderer {
 
   private loop = () => {
     this.rafId = requestAnimationFrame(this.loop);
-    const dt = this.clock.getDelta();
+    this.timer.update();
+    const dt = this.timer.getDelta();
     for (const fn of this.updaters) fn(dt);
     this.renderer.render(this.scene, this.camera);
   };
