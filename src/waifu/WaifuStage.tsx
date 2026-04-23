@@ -10,7 +10,7 @@ import { MotionDetect } from "@/waifu/motionDetect";
 import { StateManager } from "@/waifu/stateManager";
 import { ReactionSystem } from "@/waifu/reactionSystem";
 import type { Settings } from "@/waifu/types";
-import { VRMHumanBoneName, type VRM } from "@pixiv/three-vrm";
+import type { VRM } from "@pixiv/three-vrm";
 
 export interface WaifuHandle {
   speak: (text: string) => Promise<void>;
@@ -62,23 +62,15 @@ export function WaifuStage({ settings, modelUrl, handleRef, onStatus }: Props) {
         vrm = loaded;
         renderer.scene.add(loaded.scene);
 
-        // Auto-frame the camera on the head/upper body using VRM bones.
+        // Auto-frame the camera from the actual loaded model bounds.
         try {
-          const hum = loaded.humanoid;
-          const head = hum?.getNormalizedBoneNode(VRMHumanBoneName.Head);
-          const hips = hum?.getNormalizedBoneNode(VRMHumanBoneName.Hips);
-          const headWorld = new THREE.Vector3();
-          if (head) {
-            head.getWorldPosition(headWorld);
-          } else if (hips) {
-            hips.getWorldPosition(headWorld);
-            headWorld.y += 0.6;
-          } else {
-            headWorld.set(0, 1.4, 0);
-          }
-          const targetY = headWorld.y - 0.15;
-          renderer.camera.position.set(0, targetY + 0.05, 2.4);
-          renderer.camera.lookAt(0, targetY, 0);
+          loaded.scene.updateWorldMatrix(true, true);
+          const box = new THREE.Box3().setFromObject(loaded.scene);
+          const size = box.getSize(new THREE.Vector3());
+          const center = box.getCenter(new THREE.Vector3());
+          const targetY = center.y + size.y * 0.18;
+          renderer.camera.position.set(0, targetY, Math.max(1.9, size.y * 1.15));
+          renderer.camera.lookAt(0, targetY - 0.08, 0);
         } catch {
           /* keep default framing */
         }
