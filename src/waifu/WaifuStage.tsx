@@ -60,6 +60,28 @@ export function WaifuStage({ settings, modelUrl, handleRef, onStatus }: Props) {
         }
         vrm = loaded;
         renderer.scene.add(loaded.scene);
+
+        // Auto-frame the camera on the head/upper body using VRM bones.
+        try {
+          const hum = loaded.humanoid;
+          const head = hum?.getNormalizedBoneNode("head" as never);
+          const hips = hum?.getNormalizedBoneNode("hips" as never);
+          const headWorld = new (require("three") as typeof import("three")).Vector3();
+          if (head) {
+            head.getWorldPosition(headWorld);
+          } else if (hips) {
+            hips.getWorldPosition(headWorld);
+            headWorld.y += 0.6;
+          } else {
+            headWorld.set(0, 1.4, 0);
+          }
+          const targetY = headWorld.y - 0.15;
+          renderer.camera.position.set(0, targetY + 0.05, 2.4);
+          renderer.camera.lookAt(0, targetY, 0);
+        } catch {
+          /* keep default framing */
+        }
+
         anim = new AnimationController(loaded);
         lip = new LipSync(loaded, voice.getLipSyncSampler());
         reaction = new ReactionSystem({ state, mic, motion, voice, anim, settings: settingsRef.current });
