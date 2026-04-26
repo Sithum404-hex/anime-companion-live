@@ -59,21 +59,10 @@ export function SettingsPanel({ open, onClose, settings, onChange }: Props) {
               </Button>
             </div>
 
-            <section className="space-y-3 mb-6">
-              <Label htmlFor="api-key">OpenRouter API Key</Label>
-              <Input
-                id="api-key"
-                type="password"
-                placeholder="sk-or-v1-…"
-                value={settings.apiKey}
-                onChange={(e) => update("apiKey", e.target.value)}
-              />
+            <section className="space-y-2 mb-6 rounded-lg border border-border/50 bg-muted/40 p-3">
+              <Label className="text-sm font-medium">AI Engine</Label>
               <p className="text-xs text-muted-foreground">
-                Stored locally in your browser. Get a free key at{" "}
-                <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer" className="underline">
-                  openrouter.ai/keys
-                </a>
-                . Uses the free Llama 3.2 model.
+                Powered by Lovable AI — no setup needed. Just start chatting and she'll reply with voice and animations 💕
               </p>
             </section>
 
