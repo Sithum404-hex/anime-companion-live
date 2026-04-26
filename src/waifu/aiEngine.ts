@@ -1,41 +1,17 @@
-const SYSTEM = `You're a cute anime assistant. Speak in short, expressive, playful sentences. Use emotions like 'ehh?', 'yay!', 'hmm~'. Keep replies under 2 sentences.`;
+import { chatWaifu } from "@/server/chat";
 
 export interface ChatMsg {
   role: "user" | "assistant" | "system";
   content: string;
 }
 
-export async function chatWithAI(apiKey: string, history: ChatMsg[]): Promise<string> {
-  if (!apiKey) throw new Error("Missing OpenRouter API key. Add it in Settings.");
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      "HTTP-Referer": typeof window !== "undefined" ? window.location.origin : "",
-      "X-Title": "AI Anime Waifu",
-    },
-    body: JSON.stringify({
-      model: "meta-llama/llama-3.2-3b-instruct:free",
-      messages: [{ role: "system", content: SYSTEM }, ...history],
-      max_tokens: 200,
-      temperature: 0.9,
-    }),
-  });
-  if (!res.ok) {
-    const t = await res.text();
-    if (res.status === 401) throw new Error("Invalid OpenRouter API key. Check Settings.");
-    if (res.status === 402) throw new Error("OpenRouter credits exhausted. Top up your account.");
-    if (res.status === 429) throw new Error("Rate limited by OpenRouter. Please wait a moment.");
-    throw new Error(`AI error ${res.status}: ${t.slice(0, 200)}`);
-  }
-  const data = await res.json();
-  const content = (data.choices?.[0]?.message?.content as string) ?? "...ehh?";
-  return content.trim();
+export async function chatWithAI(history: ChatMsg[]): Promise<string> {
+  const res = await chatWaifu({ data: { history } });
+  return res.reply;
 }
 
-const POSITIVE = ["yay", "happy", "love", "great", "haha", "awesome", "cute", "wonderful", "yes!", "sugoi"];
-const NEGATIVE = ["scared", "sad", "no!", "afraid", "sorry", "bad"];
+const POSITIVE = ["yay", "happy", "love", "great", "haha", "awesome", "cute", "wonderful", "yes!", "sugoi", "miss you", "darling", "sweet"];
+const NEGATIVE = ["scared", "sad", "no!", "afraid", "sorry", "bad", "lonely"];
 
 export function sentimentEmotion(text: string): "happy" | "scared" | "calm" {
   const low = text.toLowerCase();

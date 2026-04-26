@@ -120,16 +120,11 @@ function Index() {
 
   const handleSend = useCallback(
     async (text: string) => {
-      if (!settings.apiKey) {
-        toast.error("Add your OpenRouter API key in Settings to chat.");
-        setSettingsOpen(true);
-        return;
-      }
       setBusy(true);
       const newHist: ChatMsg[] = [...history, { role: "user", content: text }];
       setHistory(newHist);
       try {
-        const reply = await chatWithAI(settings.apiKey, newHist);
+        const reply = await chatWithAI(newHist);
         setHistory((h) => [...h, { role: "assistant", content: reply }]);
         const emo = sentimentEmotion(reply);
         if (emo === "happy") handleRef.current?.triggerHappy();
@@ -143,7 +138,7 @@ function Index() {
         setBusy(false);
       }
     },
-    [history, settings.apiKey, showSubtitle],
+    [history, showSubtitle],
   );
 
   const bgStyle = useMemo(() => {
