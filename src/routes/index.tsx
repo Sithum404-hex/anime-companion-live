@@ -138,7 +138,7 @@ function Index() {
         setBusy(false);
       }
     },
-    [history, settings.apiKey, showSubtitle],
+    [history, showSubtitle],
   );
 
   const bgStyle = useMemo(() => {
