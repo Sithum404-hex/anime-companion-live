@@ -1,0 +1,1054 @@
+﻿@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design system definition.
+ *
+ * The @theme inline block maps CSS custom properties to Tailwind utility
+ * classes (e.g. --color-primary -> bg-primary, text-primary).
+ *
+ * The :root and .dark blocks define the actual color values using oklch.
+ * All colors MUST use oklch format.
+ *
+ * To add a new semantic color:
+ * 1. Add the variable to :root (light value) and .dark (dark value)
+ * 2. Register it in @theme inline as --color-<name>: var(--<name>)
+ */
+
+@theme inline {
+  --font-sans:
+    "Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
+    system-ui, sans-serif;
+  --font-serif: "Shippori Mincho", "Playfair Display", Georgia, serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.129 0.042 264.695);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.129 0.042 264.695);
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --secondary: oklch(0.968 0.007 247.896);
+  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --accent: oklch(0.968 0.007 247.896);
+  --accent-foreground: oklch(0.208 0.042 265.755);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.704 0.04 256.788);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.984 0.003 247.858);
+  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar-primary: oklch(0.208 0.042 265.755);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
+  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-ring: oklch(0.704 0.04 256.788);
+}
+
+.dark {
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.208 0.042 265.755);
+  --card-foreground: oklch(0.984 0.003 247.858);
+  --popover: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: oklch(0.279 0.041 260.031);
+  --secondary-foreground: oklch(0.984 0.003 247.858);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --accent: oklch(0.279 0.041 260.031);
+  --accent-foreground: oklch(0.984 0.003 247.858);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.551 0.027 264.364);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.208 0.042 265.755);
+  --sidebar-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.551 0.027 264.364);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+/* ===================================================================
+   LIQUID GLASS - "anime twilight"
+   ===================================================================
+   The stage behind this UI is bright and saturated: a fully lit character
+   over a vivid wallpaper. So every console surface here is a real dielectric
+   layer rather than a translucent dark rectangle. Four things make it read as
+   glass instead of as "a box with opacity":
+
+     1. a heavy blur (34px) so nothing legible leaks through;
+     2. a SATURATION boost (175 percent) - this is the detail most
+        glassmorphism misses. Blur alone desaturates the scene behind it;
+        boosting saturation keeps the colour *through* the layer;
+     3. a gradient rim, bright at the top and falling off at the bottom, the
+        way a real lens catches light - implemented with a masked gradient
+        rather than a flat border-color;
+     4. a soft, deep, two-step shadow so the layer sits above the scene
+        instead of tinting it.
+
+   Colour discipline: the only saturated colour in the UI is --hud-accent,
+   which is driven by her current mood. The three hues below (sakura /
+   twilight / sky) are atmosphere - petals, glows, focus rings - and never
+   encode state, so a coloured thing always means something.
+   =================================================================== */
+
+@layer base {
+  :root {
+    /* Glass geometry */
+    --glass-blur: 30px;
+    --glass-blur-sm: 16px;
+    --glass-sat: 150%;
+
+    /* Tint: ink-blue, the colour of a night sky behind blossoms. */
+    --glass-tint: 13 17 34;
+
+    /* One depth scale, three densities. Panels float; chips sit on panels;
+       wells are recessed into them. */
+    --glass-fill: rgb(var(--glass-tint) / 0.56);
+    --glass-fill-chip: rgb(var(--glass-tint) / 0.44);
+    --glass-fill-well: rgb(5 7 16 / 0.42);
+    --glass-fill-bar: rgb(var(--glass-tint) / 0.34);
+
+    /* Rim: light enters from above and leaves below. */
+    --glass-rim-top: rgb(255 255 255 / 0.42);
+    --glass-rim-mid: rgb(214 226 255 / 0.11);
+    --glass-rim-bot: rgb(255 255 255 / 0.03);
+    --glass-specular: rgb(255 255 255 / 0.22);
+    --glass-shade: rgb(0 0 0 / 0.26);
+
+    --glass-shadow:
+      0 1px 2px rgb(4 6 16 / 0.32), 0 10px 24px -8px rgb(4 6 16 / 0.5),
+      0 28px 64px -24px rgb(4 6 16 / 0.66);
+    --glass-shadow-lift:
+      0 1px 2px rgb(4 6 16 / 0.34), 0 16px 34px -10px rgb(4 6 16 / 0.54),
+      0 42px 90px -30px rgb(4 6 16 / 0.72);
+
+    /* Atmosphere hues (never encode state) */
+    --sakura: 340 90% 78%;
+    --twilight: 258 92% 76%;
+    --sky: 190 94% 76%;
+    --ember: 22 96% 68%;
+
+    --ink-900: #070912;
+    --ink-800: #0b0e19;
+    --ink-700: #121727;
+    --paper: #f6f1ea;
+  }
+
+  /* A Japanese-humanist UI face for the console; the mincho serif is reserved
+     for the few places where her voice or the contract speaks. */
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: 0.004em;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 42%, transparent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline-color: color-mix(in oklab, var(--hud-accent, #9aa6bf) 78%, white 22%);
+  }
+}
+
+/* ===================================================================
+   TYPE ROLES
+   ===================================================================
+   Sans carries every control and every sentence you have to act on.
+   Mincho carries the character's name, her spoken captions and the
+   contract. Two voices, used consistently, instead of a different
+   personality on every screen.
+   =================================================================== */
+@layer components {
+  .voice-display {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .focus-ring:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--hud-accent, #9aa6bf) 80%, white 20%);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* The base layer */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    border-radius: var(--glass-radius, 1.25rem);
+    background: var(--glass-fill);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+    box-shadow:
+      var(--glass-shadow),
+      inset 0 1px 0 var(--glass-specular),
+      inset 0 -1px 0 var(--glass-shade);
+  }
+
+  /* The gradient rim. A masked gradient gives a true 1px lit edge that a
+     border-color cannot - the highlight can fade along its own length. */
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      165deg,
+      var(--glass-rim-top) 0%,
+      var(--glass-rim-mid) 34%,
+      var(--glass-rim-bot) 72%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Content must clear the rim's stacking context. */
+  .glass > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Depth variants */
+  .glass--chip {
+    background: var(--glass-fill-chip);
+    border-radius: 9999px;
+    backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--glass-sat));
+    -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(var(--glass-sat));
+    box-shadow:
+      0 1px 2px rgb(6 8 22 / 0.24),
+      0 6px 16px -8px rgb(6 8 22 / 0.4),
+      inset 0 1px 0 var(--glass-specular);
+  }
+
+  /* Recessed: darker than its parent and lit from the BOTTOM, which is what
+     reads as "inset" rather than "a dark box". */
+  .glass--well {
+    background: var(--glass-fill-well);
+    border-radius: 9999px;
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    box-shadow:
+      inset 0 1px 3px rgb(0 0 0 / 0.4),
+      inset 0 -1px 0 rgb(255 255 255 / 0.06);
+  }
+  .glass--well::before {
+    display: none;
+  }
+
+  .glass--bar {
+    background: var(--glass-fill-bar);
+    border-radius: 9999px;
+    backdrop-filter: blur(var(--glass-blur-sm)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--glass-blur-sm)) saturate(160%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.07),
+      0 4px 14px -8px rgb(6 8 22 / 0.5);
+  }
+
+  /* Specular sweep: a single pass of light across the layer when it first
+     appears. Runs ONCE. An endlessly shimmering panel is decoration, not
+     material. */
+  .glass-sheen {
+    overflow: hidden;
+  }
+  .glass-sheen::after {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    inset: -60% -20%;
+    pointer-events: none;
+    background: linear-gradient(
+      74deg,
+      transparent 38%,
+      rgb(255 255 255 / 0.13) 47%,
+      rgb(255 255 255 / 0.22) 50%,
+      rgb(255 255 255 / 0.13) 53%,
+      transparent 62%
+    );
+    transform: translateX(-120%);
+    animation: glass-sweep 1500ms cubic-bezier(0.22, 0.7, 0.2, 1) 220ms 1 both;
+  }
+
+  @keyframes glass-sweep {
+    to {
+      transform: translateX(120%);
+    }
+  }
+
+  /* Interaction. Press reads as the surface compressing under a finger: it
+     shrinks a little and brightens, then springs back. */
+  .glass-press {
+    transition:
+      transform 260ms cubic-bezier(0.2, 0.9, 0.25, 1),
+      box-shadow 260ms ease,
+      filter 200ms ease;
+    will-change: transform;
+  }
+  .glass-press:active:not(:disabled) {
+    transform: scale(0.965);
+    filter: brightness(1.14);
+  }
+  .glass-press:hover:not(:disabled) {
+    box-shadow: var(--glass-shadow-lift);
+  }
+
+  /* Focus: a bright ring plus a soft halo of the same hue. Keyboard users
+     must always be able to see where they are over a moving 3D scene. */
+  .glass-ring:focus-visible {
+    outline: 2px solid rgb(var(--sky) / 0.9);
+    outline-offset: 2px;
+    box-shadow:
+      var(--glass-shadow),
+      inset 0 1px 0 var(--glass-specular),
+      0 0 0 5px rgb(var(--sky) / 0.18);
+  }
+
+  /* iOS segmented control: one sliding thumb under the labels. The labels
+     sit above it and stay transparent; only the thumb moves, so the control
+     reads as a single object. */
+  .seg-track {
+    position: relative;
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 9999px;
+  }
+  .seg-thumb {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    border-radius: 9999px;
+    background-color: rgb(255 255 255 / 0.1);
+    /* Her mood tints the thumb, so the current mode wears her colour. */
+    background-image: linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--hud-accent) 30%, transparent),
+      color-mix(in oklab, var(--hud-accent) 9%, transparent)
+    );
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.32),
+      inset 0 -1px 0 rgb(0 0 0 / 0.16),
+      0 2px 10px -2px rgb(0 0 0 / 0.36);
+  }
+
+  /* Conversation bubbles: her voice sits in a quiet smoked-glass note, yours
+     carries the mood accent so the two sides read at a glance without labels. */
+  .bubble-them {
+    background: rgb(13 17 34 / 0.46);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border: 1px solid rgb(255 255 255 / 0.07);
+    border-radius: 1rem 1rem 1rem 0.3rem;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.08),
+      0 2px 10px -4px rgb(0 0 0 / 0.4);
+  }
+  .bubble-you {
+    border-radius: 1rem 1rem 0.3rem 1rem;
+    border: 1px solid color-mix(in oklab, var(--hud-accent) 24%, transparent);
+    background-image: linear-gradient(
+      155deg,
+      color-mix(in oklab, var(--hud-accent) 26%, transparent),
+      color-mix(in oklab, var(--hud-accent) 10%, transparent)
+    );
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 color-mix(in oklab, var(--hud-accent) 42%, transparent),
+      0 2px 12px -5px color-mix(in oklab, var(--hud-accent) 26%, transparent);
+  }
+
+  /* Slim glass scrollbar */
+  .scroll-slim {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.16) transparent;
+  }
+  .scroll-slim::-webkit-scrollbar {
+    width: 5px;
+  }
+  .scroll-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scroll-slim::-webkit-scrollbar-thumb {
+    background: rgb(255 255 255 / 0.16);
+    border-radius: 9999px;
+  }
+  .scroll-slim::-webkit-scrollbar-thumb:hover {
+    background: rgb(255 255 255 / 0.28);
+  }
+
+  /* Petals. Low count and low contrast on purpose: this is a live wallpaper
+     and the scene is already busy. */
+  .petal {
+    position: absolute;
+    top: -8%;
+    border-radius: 60% 0 60% 0;
+    background: linear-gradient(
+      140deg,
+      rgb(var(--sakura) / 0.85),
+      rgb(var(--sakura) / 0.35) 55%,
+      rgb(255 255 255 / 0.5)
+    );
+    filter: blur(0.6px);
+    will-change: transform;
+    animation-name: petal-fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    pointer-events: none;
+  }
+
+  @keyframes petal-fall {
+    0% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: var(--petal-opacity, 0.4);
+    }
+    85% {
+      opacity: var(--petal-opacity, 0.4);
+    }
+    100% {
+      transform: translate3d(var(--petal-drift, 40px), 108vh, 0)
+        rotate(calc(var(--petal-spin, 240deg) + 540deg));
+      opacity: 0;
+    }
+  }
+
+  /* Touch hearts — a small CSS-only burst spawned by a head pat. Same lane as
+     the sakura petals: pure DOM + stylesheet animation, no rAF, no WebGL, so
+     it costs nothing next to the render loop. Nodes are removed on
+     animationend by touchHeartFx.ts. */
+  .touch-heart {
+    position: absolute;
+    z-index: 20;
+    color: rgb(var(--sakura) / 0.9);
+    text-shadow: 0 0 8px rgb(var(--sakura) / 0.45);
+    font-size: calc(14px * var(--heart-scale, 1));
+    line-height: 1;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: touch-heart-rise 1.1s ease-out forwards;
+  }
+
+  @keyframes touch-heart-rise {
+    0% {
+      transform: translate3d(0, 0, 0) scale(0.4);
+      opacity: 0;
+    }
+    15% {
+      opacity: 0.95;
+    }
+    100% {
+      transform: translate3d(var(--heart-dx, 0), var(--heart-dy, -60px), 0)
+        scale(var(--heart-scale, 1));
+      opacity: 0;
+    }
+  }
+  /* An expanding ring off a control that is actively doing something — the
+     Live mic while it is held. It answers the user's action, so it keeps
+     running even under reduced motion (the state itself is also carried by
+     colour and text, never by this ring alone). */
+  @keyframes ring-expand {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1.75);
+      opacity: 0;
+    }
+  }
+
+  /* Reduced motion. Everything above that loops on its own stops. Press
+     feedback and focus rings stay - those respond to the user, they are not
+     ambience. */
+  @media (prefers-reduced-motion: reduce) {
+    .glass-sheen::after {
+      animation: none;
+      display: none;
+    }
+    .petal {
+      animation: none;
+      opacity: 0;
+    }
+    .glass-press {
+      transition-duration: 1ms;
+    }
+  }
+
+  /* ===================================================================
+     GLASS UI SCOPE
+     ===================================================================
+     The app never toggles `.dark`, so every shadcn primitive (Label,
+     Switch, Slider, Input, Button) resolves against the LIGHT theme
+     tokens — which is why default-bordered controls read as grey slabs on
+     a dark glass sheet. Rather than rewriting thirty class strings, this
+     scope remaps the semantic tokens once, for anything inside it.
+
+     Anything placed inside a `.glass-ui` container inherits dark, legible
+     values with hairline borders, so a stock shadcn control looks like part
+     of the console instead of a guest in it.
+     =================================================================== */
+  .glass-ui {
+    --background: oklch(0.16 0.03 268);
+    --foreground: oklch(0.98 0.004 250);
+    --card: oklch(0.21 0.035 268);
+    --card-foreground: oklch(0.98 0.004 250);
+    --popover: oklch(0.21 0.035 268);
+    --popover-foreground: oklch(0.98 0.004 250);
+
+    /* Her mood, so the stock primary picks up the same accent the console uses. */
+    --primary: var(--hud-accent);
+    --primary-foreground: oklch(0.16 0.03 268);
+    --secondary: oklch(0.28 0.035 268);
+    --secondary-foreground: oklch(0.98 0.004 250);
+    --muted: oklch(0.27 0.03 268);
+    --muted-foreground: oklch(0.76 0.02 260 / 0.72);
+    --accent: oklch(0.3 0.035 268);
+    --accent-foreground: oklch(0.98 0.004 250);
+    --destructive: oklch(0.66 0.19 25);
+    --destructive-foreground: oklch(0.98 0.004 250);
+
+    /* Hairlines, not outlines. */
+    --border: oklch(1 0 0 / 0.1);
+    --input: oklch(1 0 0 / 0.06);
+    --ring: oklch(0.85 0.05 230 / 0.7);
+
+    --radius: 0.875rem;
+    color: var(--foreground);
+  }
+
+  /* Selectable option tiles: the same pressed-glass treatment as every other
+     surface, so Settings reads as one material. */
+  .opt-tile {
+    border: 1px solid oklch(1 0 0 / 0.08);
+    background: oklch(1 0 0 / 0.045);
+    border-radius: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    color: oklch(1 0 0 / 0.66);
+    cursor: pointer;
+    transition:
+      background 200ms ease,
+      border-color 200ms ease,
+      color 200ms ease,
+      transform 200ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  }
+  .opt-tile:hover {
+    background: oklch(1 0 0 / 0.08);
+    color: oklch(1 0 0 / 0.92);
+  }
+  .opt-tile:active {
+    transform: scale(0.98);
+  }
+  .opt-tile:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--hud-accent, #9aa6bf) 80%, white 20%);
+    outline-offset: 2px;
+  }
+  .opt-tile[data-selected="true"] {
+    border-color: color-mix(in oklab, var(--hud-accent) 48%, transparent);
+    background: color-mix(in oklab, var(--hud-accent) 16%, transparent);
+    color: #fff;
+    box-shadow: inset 0 1px 0 color-mix(in oklab, var(--hud-accent) 32%, transparent);
+  }
+
+  /* A quiet group label. Sentence case, because this is a conversation, not
+     an instrument panel from a fighter jet. */
+  .opt-section-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: oklch(1 0 0 / 0.6);
+  }
+
+  /* Helper copy. Muted but never below readable contrast. */
+  .opt-note {
+    font-size: 0.6875rem;
+    line-height: 1.55;
+    color: oklch(1 0 0 / 0.44);
+  }
+
+  /* ===================================================================
+     SETTINGS DRAWER
+     ===================================================================
+     Settings used to be one long scroll of identical purple slabs. Now
+     every screen is a short tab made of a few grouped rows. The row is
+     the smallest unit: label + optional one-line explanation on the
+     left, control on the right, hairline between. No nested cards.
+     =================================================================== */
+  .glass.glass--deep {
+    background: rgb(9 12 24 / 0.88);
+    backdrop-filter: blur(38px) saturate(145%);
+    -webkit-backdrop-filter: blur(38px) saturate(145%);
+  }
+
+  .set-tablist {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 0.8rem;
+    background: rgb(4 6 14 / 0.45);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.35);
+  }
+
+  .set-tab {
+    flex: 1;
+    min-width: 0;
+    border-radius: 0.6rem;
+    padding: 0.42rem 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.5);
+    transition:
+      color 180ms ease,
+      background 180ms ease,
+      box-shadow 180ms ease;
+  }
+  .set-tab:hover {
+    color: rgb(255 255 255 / 0.78);
+  }
+  .set-tab[aria-selected="true"] {
+    color: #fff;
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 18%, rgb(255 255 255 / 0.06));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      0 1px 4px rgb(0 0 0 / 0.22);
+  }
+
+  /* Mutually exclusive choices: a quiet segmented row, so a settings screen
+     reads as a few decisions rather than a tray of buttons. */
+  .choice-grid {
+    display: grid;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 0.75rem;
+    background: rgb(4 6 14 / 0.38);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.28);
+  }
+  .choice {
+    min-width: 0;
+    padding: 0.42rem 0.4rem;
+    border-radius: 0.55rem;
+    color: rgb(255 255 255 / 0.46);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    transition:
+      color 160ms ease,
+      background 160ms ease,
+      box-shadow 160ms ease;
+  }
+  .choice:hover {
+    color: rgb(255 255 255 / 0.8);
+    background: rgb(255 255 255 / 0.04);
+  }
+  .choice[data-selected="true"] {
+    color: #fff;
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 18%, rgb(255 255 255 / 0.05));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12);
+  }
+
+  /* Larger selectable card: used by outfits and room backgrounds. */
+  .choice-card {
+    border: 1px solid rgb(255 255 255 / 0.075);
+    border-radius: 0.85rem;
+    background: rgb(255 255 255 / 0.03);
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      transform 180ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  }
+  .choice-card:hover {
+    background: rgb(255 255 255 / 0.06);
+    border-color: rgb(255 255 255 / 0.13);
+  }
+  .choice-card:active {
+    transform: scale(0.99);
+  }
+  .choice-card[data-selected="true"] {
+    border-color: color-mix(in oklab, var(--hud-accent, #9aa6bf) 44%, transparent);
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 10%, transparent);
+  }
+
+  .set-section {
+    margin-bottom: 1.4rem;
+  }
+  .set-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0 0 0.45rem;
+    padding: 0 0.2rem;
+  }
+  .set-section-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgb(255 255 255 / 0.62);
+  }
+  .set-section-note {
+    font-size: 0.6875rem;
+    color: rgb(255 255 255 / 0.4);
+    text-align: right;
+  }
+
+  .set-card {
+    border: 1px solid rgb(255 255 255 / 0.075);
+    background: rgb(255 255 255 / 0.032);
+    border-radius: 0.95rem;
+    padding: 0 0.9rem;
+  }
+
+  .set-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.78rem 0;
+  }
+  .set-row + .set-row {
+    border-top: 1px solid rgb(255 255 255 / 0.06);
+  }
+  .set-row--stack {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .set-row-copy {
+    min-width: 0;
+  }
+  .set-row-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.86);
+    cursor: pointer;
+  }
+  .set-row-hint {
+    display: block;
+    margin-top: 0.18rem;
+    font-size: 0.6875rem;
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.46);
+    text-wrap: pretty;
+  }
+
+  .set-input {
+    width: 100%;
+    height: 2.5rem;
+    border: 1px solid rgb(255 255 255 / 0.075);
+    border-radius: 0.7rem;
+    background: rgb(4 6 14 / 0.46);
+    padding: 0 0.8rem;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.8125rem;
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.32);
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+  .set-input::placeholder {
+    color: rgb(255 255 255 / 0.26);
+  }
+  .set-input:focus {
+    outline: none;
+    border-color: color-mix(in oklab, var(--hud-accent, #9aa6bf) 50%, transparent);
+    box-shadow:
+      inset 0 1px 2px rgb(0 0 0 / 0.32),
+      0 0 0 3px color-mix(in oklab, var(--hud-accent, #9aa6bf) 14%, transparent);
+  }
+
+  .live-mic-orb {
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 20%, transparent);
+    color: var(--hud-accent, #9aa6bf);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.14);
+  }
+
+  /* Composer well — a recessed track inside the floating dock, with the send
+     button living inside it so the bottom of the screen has one object, not
+     four circles competing with the scene. */
+  .composer-well {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.25rem 0.25rem 1rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    border-radius: 9999px;
+    background: rgb(5 7 15 / 0.45);
+    box-shadow:
+      inset 0 1px 3px rgb(0 0 0 / 0.34),
+      inset 0 -1px 0 rgb(255 255 255 / 0.04);
+    transition:
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+  .composer-well:focus-within {
+    border-color: color-mix(in oklab, var(--hud-accent, #9aa6bf) 45%, transparent);
+    box-shadow:
+      inset 0 1px 3px rgb(0 0 0 / 0.34),
+      0 0 0 3px color-mix(in oklab, var(--hud-accent, #9aa6bf) 12%, transparent);
+  }
+
+  .set-range {
+    width: 100%;
+    height: 1.25rem;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  .set-range::-webkit-slider-runnable-track {
+    height: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--hud-accent, #9aa6bf) 70%, transparent),
+      rgb(255 255 255 / 0.12)
+    );
+  }
+  .set-range::-moz-range-track {
+    height: 3px;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.14);
+  }
+  .set-range::-webkit-slider-thumb {
+    appearance: none;
+    width: 0.8rem;
+    height: 0.8rem;
+    margin-top: -0.32rem;
+    border: 1px solid rgb(255 255 255 / 0.5);
+    border-radius: 9999px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  }
+  .set-range::-moz-range-thumb {
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 1px solid rgb(255 255 255 / 0.5);
+    border-radius: 9999px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
+  }
+
+  .set-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 2.1rem;
+    padding: 0 0.85rem;
+    border: 1px solid rgb(255 255 255 / 0.09);
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.055);
+    color: rgb(255 255 255 / 0.8);
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease,
+      transform 180ms cubic-bezier(0.2, 0.9, 0.25, 1);
+  }
+  .set-btn:hover:not(:disabled) {
+    background: rgb(255 255 255 / 0.1);
+    color: #fff;
+  }
+  .set-btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .set-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.38;
+  }
+  .set-btn--accent {
+    border-color: color-mix(in oklab, var(--hud-accent, #9aa6bf) 42%, transparent);
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 20%, transparent);
+    color: #fff;
+  }
+  .set-btn--accent:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--hud-accent, #9aa6bf) 30%, transparent);
+  }
+  .set-btn--danger {
+    border-color: rgb(251 113 133 / 0.2);
+    background: rgb(251 113 133 / 0.07);
+    color: rgb(253 164 175);
+  }
+  .set-btn--danger:hover:not(:disabled) {
+    background: rgb(251 113 133 / 0.13);
+    color: rgb(254 205 211);
+  }
+
+  .set-icon-btn {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    color: rgb(255 255 255 / 0.5);
+    transition:
+      color 180ms ease,
+      background 180ms ease;
+  }
+  .set-icon-btn:hover {
+    background: rgb(255 255 255 / 0.08);
+    color: #fff;
+  }
+
+  .set-divider {
+    height: 1px;
+    background: rgb(255 255 255 / 0.06);
+  }
+
+  .set-disclosure {
+    border-top: 1px solid rgb(255 255 255 / 0.06);
+  }
+  .set-disclosure > summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.78rem 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.58);
+    cursor: pointer;
+    list-style: none;
+  }
+  .set-disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+  .set-disclosure > summary:hover {
+    color: rgb(255 255 255 / 0.85);
+  }
+  .set-disclosure > summary::after {
+    content: "";
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-left: auto;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-1px);
+    transition: transform 200ms ease;
+  }
+  .set-disclosure[open] > summary::after {
+    transform: rotate(225deg) translateY(-1px);
+  }
+  .set-disclosure-body {
+    padding-bottom: 0.8rem;
+  }
+
+  /* Frosted glass degrades to a denser, more opaque panel rather than
+     becoming unreadable. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass,
+    .glass--chip,
+    .glass--bar {
+      background: rgb(var(--glass-tint) / 0.88);
+    }
+    .glass--well {
+      background: rgb(7 9 22 / 0.8);
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "characterId": "yuki",
+  "characterLabel": "Youki",
+  "defaultOutfit": "yuki_casual",
+  "outfits": [
+    {
+      "id": "yuki_casual",
+      "label": "Casual",
+      "file": "/models/waifu.vrm",
+      "preview": null
+    }
+  ]
+}
