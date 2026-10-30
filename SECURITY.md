@@ -12,6 +12,7 @@
 2. Remove it from the working tree and from `.env.local`.
 3. If it was committed, purge it from history with `git filter-repo` (or BFG) and force-push.
 4. Tell collaborators to re-clone, because their local clones still contain the old history.
+5. A force-push removes the branch reference but GitHub can keep serving unreachable commits by SHA. After rotating the key, ask GitHub Support to purge cached views, or delete and recreate the repository if it has no valuable history.
 
 ## Auth and offline mode
 
