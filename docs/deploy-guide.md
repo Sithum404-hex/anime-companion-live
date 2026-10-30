@@ -110,6 +110,26 @@ repo root.
 
 Make sure you use the non-VITE versions (e.g. TYPECAST_API_KEY, not VITE_TYPECAST_API_KEY).
 
+#### CLI alternative (recommended)
+
+After `npx wrangler login`, push all three server keys from `.env.local` without
+copying them into the dashboard:
+
+```bash
+npm run secrets:cloudflare
+```
+
+The script sends each value through stdin, so it never appears in the command
+line or shell history. Preview what it will upload with:
+
+```bash
+npm run secrets:cloudflare -- --dry-run
+```
+
+Never put these keys in `wrangler.jsonc`, `VITE_*` variables, or any file that
+is committed. The build runs a post-build scan and fails if a real key is
+inlined into the client bundle.
+
 5. Click **"Save"**
 
 ### Step 5: Wait for first deploy

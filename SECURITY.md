@@ -5,6 +5,8 @@
 - Server keys belong in `.env.local` (gitignored) or the deployment environment. Never commit them.
 - Only `VITE_*` values reach the browser. Treat every `VITE_*` value as public; never put an API key there.
 - `npm run check:secrets` scans the working tree for common key formats. CI runs it on every push and pull request.
+- `npm run build` runs `scripts/check-build-secrets.mjs` after the build. If a real key from `.env.local` appears in `dist/client` or `dist/server`, the build fails.
+- For Cloudflare, `npm run secrets:cloudflare` pushes `OPENROUTER_API_KEY`, `TYPECAST_API_KEY`, and `GEMINI_API_KEY` from `.env.local` into Worker secrets via stdin. It never prints the values. Authenticate first with `npx wrangler login` or `CLOUDFLARE_API_TOKEN`.
 
 ## If a key leaks
 
